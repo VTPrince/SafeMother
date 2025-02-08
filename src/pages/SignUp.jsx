@@ -8,9 +8,25 @@ const SignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log('SignUp Data:', { username, email, password });
+    try{ 
+      const res = await fetch('https://apex.oracle.com/pls/apex/maternal_health_dashboard/user/register/',{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: email,
+          password: password
+        })
+      });
+      const data = res.json();
+      console.log('Sign Up Data:', data);
+    }catch(error){
+      console.error('Sign Up Error:', error);
+    }
     // Add your sign-up logic here
   };
 
