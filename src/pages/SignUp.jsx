@@ -2,11 +2,15 @@ import React, { useState } from 'react';
 import { Button } from '@mui/material';
 import AuthForm from '../components/AuthForm';
 import InputField from '../components/InputField';
+import { useDispatch } from 'react-redux';
+import { saveId,saveEmail } from '../slices/userInfoSlice';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const dispatch = useDispatch();
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -22,8 +26,18 @@ const SignUp = () => {
           password: password
         })
       });
-      const data = res.json();
-      console.log('Sign Up Data:', data);
+
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`);
+      }
+
+      const headers = res.headers;
+      const userId = headers.get('UserId');
+
+
+      dispatch(saveId(userId));
+      dispatch(saveEmail(email));
+
     }catch(error){
       console.error('Sign Up Error:', error);
     }
