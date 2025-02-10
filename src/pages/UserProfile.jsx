@@ -1,8 +1,15 @@
 // arc/pages/UserProfile.jsx
 import React, { useState } from "react";
 import {Button, Box, Card, CardContent, Typography, Grid, TextField } from "@mui/material";
+import { useSelector } from 'react-redux';
 
 const UserProfile = () => {
+
+    const userId = useSelector((state)=> state.userInfo.user_id);
+    const userEmail = useSelector((state)=> state.userInfo.email);
+
+    console.log("unser info", userId,userEmail);
+
     const [formData, setFormData] = useState({
         firstName: "",
         lastName: "",
@@ -32,7 +39,7 @@ const UserProfile = () => {
 
         console.log('Formatted Date:', formattedDate);
         e.preventDefault();
-        onslotchange.log("User Profile Data:", formData);
+        // onslotchange.log("User Profile Data:", formData);
         try{
             const res = await fetch("https://apex.oracle.com/pls/apex/maternal_health_dashboard/user/profile/",{
                 method: 'POST',
@@ -41,16 +48,17 @@ const UserProfile = () => {
                 },
                 body: JSON.stringify({
                     "cur_preg_week": formData.pregnancyWeek,
-                    "email": formData.email,
+                    "email": userEmail,
                     "exp_del_date": formattedDate,
                     "first_name": formData.firstName,
                     "last_name": formData.lastName,
                     "phone_number": formData.phoneNumber,
-                    "user_id": 164
+                    "user_id": userId
                 })
             })
-            const data = res.json();
-            console.log('Sign Up Data:', data);
+            if (!res.ok) {
+                throw new Error(`HTTP error! status: ${res.status}`);
+              }
         }catch(error){
             console.error("User Profile Error:", error);
         }
