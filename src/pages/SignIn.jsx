@@ -2,15 +2,30 @@ import React, { useState } from 'react';
 import { Button } from '@mui/material';
 import AuthForm from '../components/AuthForm';
 import InputField from '../components/InputField';
+import { supabase } from '../../SupabaseClient';
+import { useDispatch } from 'react-redux';
+import { saveId } from '../slices/userInfoSlice';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (e) => {
+  const dispatch = useDispatch();
+
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log('SignIn Data:', { email, password });
     // Add your sign-in logic here
+    try{
+      const { data, error } = await supabase.from('USERS').select()
+      .eq('EMAIL', email)
+      .eq('PASSWORD_HASH', password);
+
+    dispatch(saveId(data[0]['USER_ID']));
+
+    }catch(error){
+      console.error(error)
+    }
   };
 
   return (
