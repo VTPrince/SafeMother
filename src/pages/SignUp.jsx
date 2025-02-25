@@ -4,6 +4,7 @@ import AuthForm from '../components/AuthForm';
 import InputField from '../components/InputField';
 import { useDispatch } from 'react-redux';
 import { saveId,saveEmail } from '../slices/userInfoSlice';
+import { supabase } from '../../SupabaseClient';
 
 const SignUp = () => {
   const [username, setUsername] = useState('');
@@ -14,34 +15,19 @@ const SignUp = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log('SignUp Data:', { username, email, password });
-    try{ 
-      const res = await fetch('https://apex.oracle.com/pls/apex/maternal_health_dashboard/user/register/',{
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: email,
-          password: password
-        })
-      });
 
-      if (!res.ok) {
-        throw new Error(`HTTP error! status: ${res.status}`);
-      }
+    try{  
+    const { data, error } = await supabase.from('USERS').insert([
+      { EMAIL: email, PASSWORD_HASH: password },
+    ]).select()
 
-      const headers = res.headers;
-      const userId = headers.get('UserId');
-
-
-      dispatch(saveId(userId));
-      dispatch(saveEmail(email));
+    dispatch(saveId(data[0]['USER_ID']));
+    dispatch(saveEmail(email));
 
     }catch(error){
       console.error('Sign Up Error:', error);
     }
-    // Add your sign-up logic here
+
   };
 
   return (
