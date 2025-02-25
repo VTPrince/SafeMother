@@ -22,7 +22,7 @@ const SignUp = () => {
     ]).select()
 
     dispatch(saveId(data[0]['USER_ID']));
-    dispatch(saveEmail(email));
+    dispatch(saveEmail(data[0]['EMAIL']));
 
     }catch(error){
       console.error('Sign Up Error:', error);

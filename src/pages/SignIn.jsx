@@ -4,7 +4,7 @@ import AuthForm from '../components/AuthForm';
 import InputField from '../components/InputField';
 import { supabase } from '../../SupabaseClient';
 import { useDispatch } from 'react-redux';
-import { saveId } from '../slices/userInfoSlice';
+import { saveId, saveEmail } from '../slices/userInfoSlice';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
@@ -22,6 +22,7 @@ const SignIn = () => {
       .eq('PASSWORD_HASH', password);
 
     dispatch(saveId(data[0]['USER_ID']));
+    dispatch(saveEmail(data[0]['EMAIL']));
 
     }catch(error){
       console.error(error)
