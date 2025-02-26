@@ -5,12 +5,14 @@ import InputField from '../components/InputField';
 import { supabase } from '../../SupabaseClient';
 import { useDispatch } from 'react-redux';
 import { saveId, saveEmail } from '../slices/userInfoSlice';
+import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const handleSubmit = async(e) => {
     e.preventDefault();
@@ -23,6 +25,8 @@ const SignIn = () => {
 
     dispatch(saveId(data[0]['USER_ID']));
     dispatch(saveEmail(data[0]['EMAIL']));
+
+    navigate("/profile");
 
     }catch(error){
       console.error(error)
