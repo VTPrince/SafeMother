@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
@@ -32,7 +33,7 @@ const App = () => {
       <Routes>
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
-        <Route path="/profile" element={<UserProfile />} />
+        <Route path="/profile" element={<ProtectedRoute element={UserProfile}/>} />
       </Routes>
     </Router>
   );
