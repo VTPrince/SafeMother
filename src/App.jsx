@@ -5,6 +5,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { Dashboard } from "./pages/Dashboard";
 
 const App = () => {
   return (
@@ -28,12 +29,16 @@ const App = () => {
         <Link to="/profile" style={{ textDecoration: "none", color: "#1976d2" }}>
           Profile
         </Link>
+        <Link to="/dashboard" style={{ textDecoration: "none", color: "#1976d2" }}>
+          Dashboard
+        </Link>
       </nav>
 
       <Routes>
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<ProtectedRoute element={UserProfile}/>} />
+        <Route path="/dashboard" element={<ProtectedRoute element={Dashboard}/>} />
       </Routes>
     </Router>
   );
