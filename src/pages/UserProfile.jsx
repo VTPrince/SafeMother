@@ -2,13 +2,12 @@
 import React, { useState } from "react";
 import {Button, Box, Card, CardContent, Typography, Grid, TextField } from "@mui/material";
 import { useSelector } from 'react-redux';
+import { supabase } from '../../SupabaseClient';
 
 const UserProfile = () => {
 
     const userId = useSelector((state)=> state.userInfo.user_id);
     const userEmail = useSelector((state)=> state.userInfo.email);
-
-    console.log("unser info", userId,userEmail);
 
     const [formData, setFormData] = useState({
         firstName: "",
@@ -41,23 +40,14 @@ const UserProfile = () => {
         e.preventDefault();
         // onslotchange.log("User Profile Data:", formData);
         try{
-            const res = await fetch("https://apex.oracle.com/pls/apex/maternal_health_dashboard/user/profile/",{
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    "cur_preg_week": formData.pregnancyWeek,
-                    "email": userEmail,
-                    "exp_del_date": formattedDate,
-                    "first_name": formData.firstName,
-                    "last_name": formData.lastName,
-                    "phone_number": formData.phoneNumber,
-                    "user_id": userId
-                })
-            })
-            if (!res.ok) {
-                throw new Error(`HTTP error! status: ${res.status}`);
+            
+        const { data, error } = await supabase
+        .from('user_profile').insert([{ user_id: userId, firstname: formData.firstName, lastname: formData.lastName, email: userEmail, phonenumber: formData.phoneNumber, expdeldate: formattedDate, pregweek: formData.pregnancyWeek, healthstatus: formData.healthStatus},
+        ])
+        .select()
+
+        if (!data) {
+                throw new Error(`HTTP error! status: ${error}`);
               }
         }catch(error){
             console.error("User Profile Error:", error);
@@ -113,7 +103,7 @@ const UserProfile = () => {
                             label="Email"
                             name="email"
                             variant="outlined"
-                            value={formData.email}
+                            value={userEmail}
                             onChange={handleChange}
                             required
                         />
