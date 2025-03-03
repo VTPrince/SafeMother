@@ -16,7 +16,6 @@ const SignIn = () => {
 
   const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log('SignIn Data:', { email, password });
     // Add your sign-in logic here
     try{
       const { data, error } = await supabase.from('USERS').select()
@@ -26,7 +25,7 @@ const SignIn = () => {
     dispatch(saveId(data[0]['USER_ID']));
     dispatch(saveEmail(data[0]['EMAIL']));
 
-    navigate("/profile");
+    navigate("/dashboard");
 
     }catch(error){
       console.error(error)
