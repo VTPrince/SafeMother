@@ -54,26 +54,28 @@ const UserProfile = () => {
                         />
                         </Grid>    
                         <Grid item xs={12}>
-                            <TextField
-                            fullWidth
-                            label="Email"
-                            name="email"
-                            variant="outlined"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
+                        <TextField
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  variant="outlined"
+                  type="email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  required
+                />
                         </Grid>  
                         <Grid item xs={12}>
-                            <TextField
-                            fullWidth
-                            label="Phone Number"
-                            name="phoneNumber"
-                            variant="outlined"
-                            value={formData.phoneNumber}
-                            onChange={handleChange}
-                            required
-                        />
+                        <TextField
+                  fullWidth
+                  label="Phone Number"
+                  name="phoneNumber"
+                  variant="outlined"
+                  type="tel"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  required
+                />
                         </Grid>    
                         <Grid item xs={12}>
                             <TextField
