@@ -1,24 +1,57 @@
 // arc/pages/UserProfile.jsx
 import React, { useState } from "react";
 import {Button, Box, Card, CardContent, Typography, Grid, TextField } from "@mui/material";
+import { useSelector } from 'react-redux';
+import { supabase } from '../../SupabaseClient';
 
 const UserProfile = () => {
+
+    const userId = useSelector((state)=> state.userInfo.user_id);
+    const userEmail = useSelector((state)=> state.userInfo.email);
+
     const [formData, setFormData] = useState({
-        fullName: "",
+        firstName: "",
+        lastName: "",
         email: "",
-        phoneNumber: "",
+        phoneNumber: 0,
         expectedDeliveryDate: "",
-        pregnancyWeek: "",
+        pregnancyWeek: 0,
         healthStatus: "",
     });
 
     const handleChange = (e) => {
-        setFormData({...formData,[e.target.name]: e.target.value});
+        const { name, value } = e.target;
+        setFormData((prevFormData) => ({
+            ...prevFormData,
+            [name]: name === "phoneNumber" || name === "pregnancyWeek" ? Number(value) : value,
+        }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async(e) => {
+        console.log('Sign Up Data:', formData);
+        const date = new Date(formData.expectedDeliveryDate);
+        const formattedDate = date.toLocaleDateString('en-US', {
+            month: '2-digit',
+            day: '2-digit',
+            year: 'numeric'
+        });
+
+        console.log('Formatted Date:', formattedDate);
         e.preventDefault();
-        onslotchange.log("User Profile Data:", formData);
+        // onslotchange.log("User Profile Data:", formData);
+        try{
+            
+        const { data, error } = await supabase
+        .from('user_profile').insert([{ user_id: userId, firstname: formData.firstName, lastname: formData.lastName, email: userEmail, phonenumber: formData.phoneNumber, expdeldate: formattedDate, pregweek: formData.pregnancyWeek, healthstatus: formData.healthStatus},
+        ])
+        .select()
+
+        if (!data) {
+                throw new Error(`HTTP error! status: ${error}`);
+              }
+        }catch(error){
+            console.error("User Profile Error:", error);
+        }
     };
     return (
         <Box
@@ -45,37 +78,47 @@ const UserProfile = () => {
                         <Grid item xs={12}>
                             <TextField
                             fullWidth
-                            label="Full Name"
-                            name="fullName"
+                            label="First Name"
+                            name="firstName"
                             variant="outlined"
-                            value={formData.fullName}
+                            value={formData.firstName}
                             onChange={handleChange}
                             required
                         />
-                        </Grid>    
+                        </Grid>   
                         <Grid item xs={12}>
-                        <TextField
-                  fullWidth
-                  label="Email"
-                  name="email"
-                  variant="outlined"
-                  type="email"
-                  value={formData.email}
-                  onChange={handleChange}
-                  required
-                />
+                            <TextField
+                            fullWidth
+                            label="Last Name"
+                            name="lastName"
+                            variant="outlined"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            required
+                        />
+                        </Grid>   
+                        <Grid item xs={12}>
+                            <TextField
+                            fullWidth
+                            label="Email"
+                            name="email"
+                            variant="outlined"
+                            value={userEmail}
+                            onChange={handleChange}
+                            required
+                        />
                         </Grid>  
                         <Grid item xs={12}>
-                        <TextField
-                  fullWidth
-                  label="Phone Number"
-                  name="phoneNumber"
-                  variant="outlined"
-                  type="tel"
-                  value={formData.phoneNumber}
-                  onChange={handleChange}
-                  required
-                />
+                            <TextField
+                            fullWidth
+                            label="Phone Number"
+                            name="phoneNumber"
+                            variant="outlined"
+                            type="number"
+                            value={formData.phoneNumber}
+                            onChange={handleChange}
+                            required
+                        />
                         </Grid>    
                         <Grid item xs={12}>
                             <TextField
@@ -96,6 +139,7 @@ const UserProfile = () => {
                             label="Current Week of Pregnancy"
                             name="pregnancyWeek"
                             variant="outlined"
+                            type="number"
                             value={formData.pregnancyWeek}
                             onChange={handleChange}
                             required
@@ -107,7 +151,7 @@ const UserProfile = () => {
                             label="Patient Health Status"
                             name="healthStatus"
                             variant="outlined"
-                            multiline={3}
+                            multiline={true}
                             value={formData.healthStatus}
                             onChange={handleChange}
                             
