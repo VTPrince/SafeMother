@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { supabase } from "../../SupabaseClient";
 import { useSelector } from "react-redux";
-import { Card, CardContent, Typography, Box, Container, Button, Grid } from "@mui/material";
+import { Card, CardContent, Typography, Box, Container, Button, Grid, List, ListItem, ListItemText, ListItemAvatar, Avatar } from "@mui/material";
 import { CardStat } from "../components/CardStat";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import dayjs from "dayjs";
+import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 
 export const Dashboard = () => {
   const userId = useSelector((state) => state.userInfo.user_id);
@@ -22,6 +23,10 @@ export const Dashboard = () => {
         .select("*")
         .eq("user_id", userId)
         .single(); // Ensure we get only one record
+
+        data?.appointdate.forEach((date)=>{
+          console.log("this",date)
+        })
     
       if (error) {
         console.error("Error while fetching data", error);
@@ -122,10 +127,28 @@ export const Dashboard = () => {
             <CardStat title="Delivery Date" value={data?.expdeldate} />
           </Grid>
           <Grid item xs={6}>
-            <CardStat 
+            <List 
+              sx={{
+                maxHeight: "100px",
+                overflowY: "auto",
+              }}
+            >
+            {data?.appointdate.map((date,index) => (
+             <ListItem>
+              <ListItemAvatar>
+                <Avatar>
+                  <CalendarMonthIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText primary ={date} />
+             </ListItem> 
+            ))
+            }
+            </List>
+            {/* <CardStat 
               title="Appointments" 
-              value={data?.appointments?.join(", ") || "No appointments yet"} 
-            />
+              value={data?.appointdate?.join(", ") || "No appointments yet"} 
+            /> */}
           </Grid>
         </Grid>
       </Box>
