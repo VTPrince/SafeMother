@@ -46,7 +46,7 @@ export const Dashboard = () => {
         });
         console.log("fotmat",formatDates)
         if(formatDates){    setAppointDate(formatDates)    ;}
-        setData()
+        setData(data)
 
       }
     };
