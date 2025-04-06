@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { supabase } from "../../SupabaseClient";
 import { useSelector } from "react-redux";
 import { Card, CardContent, Typography, Box, Container, Button, Grid, List, ListItem, ListItemText, ListItemAvatar, Avatar } from "@mui/material";
@@ -18,23 +18,15 @@ export const Dashboard = () => {
   const [selectedDate, setSelectedDate] = useState(null);
   const [updating, setUpdating] = useState(false);
 
-  const appointmentData = {
-    day: 'Wed',
-    date: '28',
-  };
 
-  useEffect(() => {
+  const fetchUserData = useCallback(async() => {
     const getData = async () => {
       const { data, error } = await supabase
         .from("user_profile")
         .select("*")
         .eq("user_id", userId)
-        .single(); // Ensure we get only one record
-
-        data?.appointdate.forEach((date)=>{
-          console.log("this",date)
-        })
-    
+        .single();
+            
       if (error) {
         console.error("Error while fetching data", error);
       } else {
@@ -44,7 +36,7 @@ export const Dashboard = () => {
           const year = dayjs(date).format("YYYY");
           return {day,month,year}
         });
-        console.log("fotmat",formatDates)
+
         if(formatDates){    setAppointDate(formatDates)    ;}
         setData(data)
 
@@ -52,6 +44,10 @@ export const Dashboard = () => {
     };
     getData();
   }, [userId]);
+
+  useEffect(()=>{
+    fetchUserData();
+  },[fetchUserData])
 
   const handleScheduleClick = () => {
     setShowDatePicker(!showDatePicker);
@@ -79,10 +75,7 @@ export const Dashboard = () => {
       console.error("Error updating appointment:", error);
     } else {
       console.log("Appointment added:", formattedDate);
-      setData((prev) => ({
-        ...prev,
-        appointdate: updatedAppointments
-      }));
+      await fetchUserData();
       setShowDatePicker(false);
     }
     setUpdating(false);
