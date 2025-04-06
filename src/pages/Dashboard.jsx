@@ -8,13 +8,20 @@ import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import dayjs from "dayjs";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
+import AppointmentCard from "../components/AppintmentView";
 
 export const Dashboard = () => {
   const userId = useSelector((state) => state.userInfo.user_id);
   const [data, setData] = useState(null);
+  const [appointDate,setAppointDate] = useState(null)
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [updating, setUpdating] = useState(false);
+
+  const appointmentData = {
+    day: 'Wed',
+    date: '28',
+  };
 
   useEffect(() => {
     const getData = async () => {
@@ -31,7 +38,16 @@ export const Dashboard = () => {
       if (error) {
         console.error("Error while fetching data", error);
       } else {
-        setData(data);
+        const formatDates = data?.appointdate.map((date)=>{
+          const day = dayjs(date).format("DD");
+          const month = dayjs(date).format("MMMM");
+          const year = dayjs(date).format("YYYY");
+          return {day,month,year}
+        });
+        console.log("fotmat",formatDates)
+        if(formatDates){    setAppointDate(formatDates)    ;}
+        setData(data)
+
       }
     };
     getData();
@@ -127,7 +143,8 @@ export const Dashboard = () => {
             <CardStat title="Delivery Date" value={data?.expdeldate} />
           </Grid>
           <Grid item xs={6}>
-            <List 
+      <AppointmentCard dates={appointDate} />
+            {/* <List 
               sx={{
                 maxHeight: "100px",
                 overflowY: "auto",
@@ -144,12 +161,12 @@ export const Dashboard = () => {
              </ListItem> 
             ))
             }
-            </List>
+            </List>  */}
             {/* <CardStat 
               title="Appointments" 
               value={data?.appointdate?.join(", ") || "No appointments yet"} 
             /> */}
-          </Grid>
+          </Grid> 
         </Grid>
       </Box>
     </Container>
