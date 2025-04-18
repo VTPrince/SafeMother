@@ -69,9 +69,6 @@ const ModalPop = ({data}) => {
           >
             {date?.year}
           </Typography>
-              {/* <ListItemText primary ={date?.day} />
-              <ListItemText primary = {date?.month}/>
-              <ListItemText primary = {date?.year}/> */}
               </Box>
 
              </ListItem> 
