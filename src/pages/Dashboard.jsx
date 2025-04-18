@@ -24,13 +24,13 @@ export const Dashboard = () => {
       const { data, error } = await supabase
         .from("user_profile")
         .select("*")
-        .eq("user_id", userId)
+        .eq("uuid", userId)
         .single();
             
       if (error) {
         console.error("Error while fetching data", error);
       } else {
-        const formatDates = data?.appointdate.map((date)=>{
+        const formatDates = data?.appointdate?.map((date)=>{
           const day = dayjs(date).format("DD");
           const month = dayjs(date).format("MMMM");
           const year = dayjs(date).format("YYYY");
@@ -69,7 +69,7 @@ export const Dashboard = () => {
     const { error } = await supabase
       .from("user_profile")
       .update({ appointdate: updatedAppointments })
-      .eq("user_id", userId);
+      .eq("uuid", userId);
 
     if (error) {
       console.error("Error updating appointment:", error);
@@ -137,28 +137,6 @@ export const Dashboard = () => {
           </Grid>
           <Grid item xs={6}>
       <AppointmentCard dates={appointDate} />
-            {/* <List 
-              sx={{
-                maxHeight: "100px",
-                overflowY: "auto",
-              }}
-            >
-            {data?.appointdate.map((date,index) => (
-             <ListItem>
-              <ListItemAvatar>
-                <Avatar>
-                  <CalendarMonthIcon />
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText primary ={date} />
-             </ListItem> 
-            ))
-            }
-            </List>  */}
-            {/* <CardStat 
-              title="Appointments" 
-              value={data?.appointdate?.join(", ") || "No appointments yet"} 
-            /> */}
           </Grid> 
         </Grid>
       </Box>
