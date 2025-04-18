@@ -4,7 +4,7 @@ import AuthForm from '../components/AuthForm';
 import InputField from '../components/InputField';
 import { supabase } from '../../SupabaseClient';
 import { useDispatch } from 'react-redux';
-import { saveId, saveEmail } from '../slices/userInfoSlice';
+import { saveEmail } from '../slices/userInfoSlice';
 import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
@@ -18,12 +18,14 @@ const SignIn = () => {
     e.preventDefault();
     // Add your sign-in logic here
     try{
-      const { data, error } = await supabase.from('USERS').select()
-      .eq('EMAIL', email)
-      .eq('PASSWORD_HASH', password);
+    const { data,error } = await supabase.auth.signInWithPassword({
+      email: email,
+      password: password,
+    })
 
-    dispatch(saveId(data[0]['USER_ID']));
-    dispatch(saveEmail(data[0]['EMAIL']));
+    if(error){
+      throw new Error("Sign in failed",error);
+    }
 
     navigate("/dashboard");
 
