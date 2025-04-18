@@ -38,11 +38,10 @@ const UserProfile = () => {
 
         console.log('Formatted Date:', formattedDate);
         e.preventDefault();
-        // onslotchange.log("User Profile Data:", formData);
         try{
             
         const { data, error } = await supabase
-        .from('user_profile').insert([{ user_id: userId, firstname: formData.firstName, lastname: formData.lastName, email: userEmail, phonenumber: formData.phoneNumber, expdeldate: formattedDate, pregweek: formData.pregnancyWeek, healthstatus: formData.healthStatus},
+        .from('user_profile').insert([{ firstname: formData.firstName, lastname: formData.lastName, email: userEmail, phonenumber: formData.phoneNumber, expdeldate: formattedDate, pregweek: formData.pregnancyWeek, healthstatus: formData.healthStatus, uuid: userId},
         ])
         .select()
 
