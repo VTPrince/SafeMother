@@ -3,7 +3,6 @@ import { Button } from '@mui/material';
 import AuthForm from '../components/AuthForm';
 import InputField from '../components/InputField';
 import { useDispatch } from 'react-redux';
-import { saveId,saveEmail } from '../slices/userInfoSlice';
 import { supabase } from '../../SupabaseClient';
 import { useNavigate } from 'react-router-dom';
 
@@ -19,12 +18,14 @@ const SignUp = () => {
     e.preventDefault();
 
     try{  
-    const { data, error } = await supabase.from('USERS').insert([
-      { EMAIL: email, PASSWORD_HASH: password },
-    ]).select()
+    const { data,error} = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
 
-    dispatch(saveId(data[0]['USER_ID']));
-    dispatch(saveEmail(data[0]['EMAIL']));
+    if(error){
+      throw new Error("Sign up failed",error);
+    }
 
     navigate("/signin")
 
