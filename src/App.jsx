@@ -1,13 +1,43 @@
 // src/App.jsx
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import React, {useEffect} from "react";
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from "react-router-dom";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { Dashboard } from "./pages/Dashboard";
+import { useDispatch } from "react-redux";
+import { supabase } from "../SupabaseClient";
+import { saveAuth, saveEmail } from "./slices/userInfoSlice";
 
 const App = () => {
+
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    const checkSession = async()=>{
+      const {data: {session}} = await supabase.auth.getSession();
+      dispatch(saveAuth({
+        isAuthenticated: !!session,
+        isSessionChecked: true,
+        user_id: session.user.id,
+      }))
+      dispatch(saveEmail(session.user.email));
+    }
+
+    checkSession();
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      dispatch(saveAuth({
+        isAuthenticated: !!session,
+        isSessionChecked: true,
+        user_id:session.user.id,
+      }));
+      dispatch(saveEmail(session.user.email));
+    });
+
+    return () => subscription.unsubscribe();
+  },[dispatch])
+
   return (
     <Router>
       <nav
@@ -35,6 +65,7 @@ const App = () => {
       </nav>
 
       <Routes>
+        <Route path="/" element= {<Navigate to={"/dashboard"}/>}/> 
         <Route path="/signin" element={<SignIn />} />
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<ProtectedRoute element={UserProfile}/>} />
