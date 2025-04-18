@@ -4,16 +4,17 @@ const initialState = {
     user_id : 0,
     email : '',
     isAuthenticated : false,
+    isSessionChecked: false,
 }
 
 export const userInfoSlice = createSlice({
     name: 'userInfo',
     initialState,
     reducers: {
-        saveId : (state,action)=>{
-            state.user_id = action.payload;
-            state.isAuthenticated = true
-            localStorage.setItem('userId',action.payload);
+        saveAuth: (state,action)=>{
+            state.user_id = action.payload.user_id;
+            state.isAuthenticated = action.payload.isAuthenticated;
+            state.isSessionChecked = action.payload.isSessionChecked;
         },
         saveEmail : (state,action)=>{
             state.email = action.payload
@@ -26,6 +27,6 @@ export const userInfoSlice = createSlice({
     },
 })
 
-export const { saveId, saveEmail } = userInfoSlice.actions;
+export const { saveAuth, saveEmail } = userInfoSlice.actions;
 
 export default userInfoSlice.reducer;
