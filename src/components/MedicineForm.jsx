@@ -21,7 +21,7 @@ const MedicineForm = () => {
   };
 const handleSubmit = async () => {
     const rowsToInsert = medicines.map((med) => ({
-      user_id: userId,
+      uuid: userId,
       name: med.name,
       days: parseInt(med.days)
     }));
