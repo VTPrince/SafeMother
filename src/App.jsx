@@ -5,6 +5,7 @@ import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
+import MedicineForm from "./components/MedicineForm";
 import { Dashboard } from "./pages/Dashboard";
 import { useDispatch } from "react-redux";
 import { supabase } from "../SupabaseClient";
@@ -70,6 +71,7 @@ const App = () => {
         <Route path="/signup" element={<SignUp />} />
         <Route path="/profile" element={<ProtectedRoute element={UserProfile}/>} />
         <Route path="/dashboard" element={<ProtectedRoute element={Dashboard}/>} />
+        <Route path="/medicine" element={<ProtectedRoute element={MedicineForm}/>}/>
       </Routes>
     </Router>
   );
