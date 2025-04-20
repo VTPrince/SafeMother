@@ -9,7 +9,7 @@ import { StaticDatePicker } from "@mui/x-date-pickers/StaticDatePicker";
 import dayjs from "dayjs";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import AppointmentCard from "../components/AppintmentView";
-import MotherFetusGraph from './MotherFetusGraph.jsx';
+// import MotherFetusGraph from './MotherFetusGraph.jsx';
 
 
 export const Dashboard = () => {
@@ -59,16 +59,16 @@ export const Dashboard = () => {
   }, [userId]);
 
    // Fetch Mother Fetus Data
-   const fetchMotherFetusData = useCallback(async () => {
-    const { data, error } = await supabase
-      .from("mother_fetus_data")
-      .select("*")
-      .eq("uuid", userId)
-      .order("created_at", { ascending: true });
+  //  const fetchMotherFetusData = useCallback(async () => {
+  //   const { data, error } = await supabase
+  //     .from("mother_fetus_data")
+  //     .select("*")
+  //     .eq("uuid", userId)
+  //     .order("created_at", { ascending: true });
 
-    if (error) console.error("Error fetching mother fetus data:", error);
-    else setMotherFetusData(data || []);
-  }, [userId]);
+  //   if (error) console.error("Error fetching mother fetus data:", error);
+  //   else setMotherFetusData(data || []);
+  // }, [userId]);
 
   //Fetch medicines separately
   const fetchMedicines = useCallback(async () => {
@@ -87,8 +87,9 @@ export const Dashboard = () => {
   useEffect(()=>{
     fetchUserData();
     fetchMedicines(); // Fetch medicines when dashboard loads
-    fetchMotherFetusData();
-  },[fetchUserData, fetchMedicines, fetchMotherFetusData]);
+    // fetchMotherFetusData();
+  },[fetchUserData, fetchMedicines]);
+    // fetchMotherFetusData
 
   const handleScheduleClick = () => {
     setShowDatePicker(!showDatePicker);
@@ -129,39 +130,39 @@ export const Dashboard = () => {
     setUpdating(false);
   };
 
-  const handleMotherFetusFormChange = (field, value) => {
-    setMotherFetusForm(prev => ({ ...prev, [field]: value }));
-  };
+  // const handleMotherFetusFormChange = (field, value) => {
+  //   setMotherFetusForm(prev => ({ ...prev, [field]: value }));
+  // };
 
-  const handleMotherFetusFormSubmit = async () => {
-    const { weight, blood_pressure, heart_rate, fetal_height, fetal_size } = motherFetusForm;
+  // const handleMotherFetusFormSubmit = async () => {
+  //   const { weight, blood_pressure, heart_rate, fetal_height, fetal_size } = motherFetusForm;
 
-    if (!weight || !blood_pressure || !heart_rate || !fetal_height || !fetal_size) {
-      alert("Please fill all the fields!");
-      return;
-    }
+  //   if (!weight || !blood_pressure || !heart_rate || !fetal_height || !fetal_size) {
+  //     alert("Please fill all the fields!");
+  //     return;
+  //   }
 
-    const { error } = await supabase
-      .from("mother_fetus_data")
-      .insert([{ 
-        uuid: userId,
-        weight: parseFloat(weight),
-        blood_pressure,
-        heart_rate: parseInt(heart_rate),
-        fetal_height: parseFloat(fetal_height),
-        fetal_size: parseFloat(fetal_size)
-      }]);
+  //   const { error } = await supabase
+  //     .from("mother_fetus_data")
+  //     .insert([{ 
+  //       uuid: userId,
+  //       weight: parseFloat(weight),
+  //       blood_pressure,
+  //       heart_rate: parseInt(heart_rate),
+  //       fetal_height: parseFloat(fetal_height),
+  //       fetal_size: parseFloat(fetal_size)
+  //     }]);
 
-    if (error) {
-      console.error("Error inserting mother fetus data:", error);
-      alert("Something went wrong!");
-    } else {
-      alert("Data saved successfully!");
-      setMotherFetusForm({ weight: "", blood_pressure: "", heart_rate: "", fetal_height: "", fetal_size: "" });
-      fetchMotherFetusData();
-      setShowHealthForm(false); // hide form after submission
-    }
-  };
+  //   if (error) {
+  //     console.error("Error inserting mother fetus data:", error);
+  //     alert("Something went wrong!");
+  //   } else {
+  //     alert("Data saved successfully!");
+  //     setMotherFetusForm({ weight: "", blood_pressure: "", heart_rate: "", fetal_height: "", fetal_size: "" });
+  //     fetchMotherFetusData();
+  //     setShowHealthForm(false); // hide form after submission
+  //   }
+  // };
 
   return (
     <Container maxWidth="xl">
@@ -215,7 +216,7 @@ export const Dashboard = () => {
         )}
 
 
-         {/* 👉 Health Form Section */}
+         {/* 👉 Health Form Section
          {showHealthForm && (
           <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 2 }}>
             <TextField label="Mother's Weight (kg)" value={motherFetusForm.weight} onChange={(e) => handleMotherFetusFormChange("weight", e.target.value)} />
@@ -227,7 +228,7 @@ export const Dashboard = () => {
               Submit Health Data
             </Button>
           </Box>
-        )}
+        )} */}
 
 
         {/* 👉 Dashboard Statistics */}
@@ -274,16 +275,6 @@ export const Dashboard = () => {
         )}
           </Box>
    
-
-         {/* Graph Section */}
-      <div className="graph-section">
-        <h3>Health Information Trends</h3>
-        {motherFetusData.length > 0 ? (
-          <MotherFetusGraph data={motherFetusData} />
-        ) : (
-          <p>No data to show yet. Please add some health information.</p>
-        )}
-      </div>
    
 
           
