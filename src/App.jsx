@@ -6,6 +6,7 @@ import SignUp from "./pages/SignUp";
 import UserProfile from "./pages/UserProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MedicineForm from "./components/MedicineForm";
+import HealthTracker from "./pages/HealthTracker";
 import { Dashboard } from "./pages/Dashboard";
 import { useDispatch } from "react-redux";
 import { supabase } from "../SupabaseClient";
@@ -57,11 +58,14 @@ const App = () => {
         <Link to="/signup" style={{ marginRight: 16, textDecoration: "none", color: "#1976d2" }}>
           Sign Up
         </Link>
-        <Link to="/profile" style={{ textDecoration: "none", color: "#1976d2" }}>
+        <Link to="/profile" style={{ marginRight: 16, textDecoration: "none", color: "#1976d2" }}>
           Profile
         </Link>
-        <Link to="/dashboard" style={{ textDecoration: "none", color: "#1976d2" }}>
+        <Link to="/dashboard" style={{ marginRight: 16, textDecoration: "none", color: "#1976d2" }}>
           Dashboard
+        </Link>
+        <Link to="/healthTracker" style={{ marginRight: 16, textDecoration: "none", color: "#1976d2" }}>
+          Health Tracker
         </Link>
       </nav>
 
@@ -72,6 +76,7 @@ const App = () => {
         <Route path="/profile" element={<ProtectedRoute element={UserProfile}/>} />
         <Route path="/dashboard" element={<ProtectedRoute element={Dashboard}/>} />
         <Route path="/medicine" element={<ProtectedRoute element={MedicineForm}/>}/>
+        <Route path="/healthTracker" element={<ProtectedRoute element={HealthTracker}/>}/>
       </Routes>
     </Router>
   );
