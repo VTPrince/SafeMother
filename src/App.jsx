@@ -7,6 +7,7 @@ import UserProfile from "./pages/UserProfile";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MedicineForm from "./components/MedicineForm";
 import HealthTracker from "./pages/HealthTracker";
+import VitalHealthData from "./pages/VitalHealthData";
 import { Dashboard } from "./pages/Dashboard";
 import { useDispatch } from "react-redux";
 import { supabase } from "../SupabaseClient";
@@ -67,6 +68,9 @@ const App = () => {
         <Link to="/healthTracker" style={{ marginRight: 16, textDecoration: "none", color: "#1976d2" }}>
           Health Tracker
         </Link>
+        <Link to="/healthEntry" style={{ marginRight: 16, textDecoration: "none", color: "#1976d2" }}>
+          Vital Health Data
+        </Link>
       </nav>
 
       <Routes>
@@ -77,6 +81,7 @@ const App = () => {
         <Route path="/dashboard" element={<ProtectedRoute element={Dashboard}/>} />
         <Route path="/medicine" element={<ProtectedRoute element={MedicineForm}/>}/>
         <Route path="/healthTracker" element={<ProtectedRoute element={HealthTracker}/>}/>
+        <Route path="/healthEntry" element={<ProtectedRoute element={VitalHealthData}/>}/>
       </Routes>
     </Router>
   );
